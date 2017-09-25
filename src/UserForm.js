@@ -5,9 +5,9 @@ class UserForm extends Component {
   render() {
     return (
       <form>
-          <input type="text" placeholder="Name" />
-          <input type="e-mail" placeholder="Email" />
-          <input type="number" placeholder="Tel." />
+          <input type="text" placeholder="Name" /> 
+          <input type="e-mail" placeholder="Email" />  
+          <input type="tel" placeholder="Tel." /> 
           <button type="submit">Submit</button>
       </form>
       
