@@ -65,15 +65,15 @@ class UserForm extends Component {
           switch(fieldName) {
               case 'name': 
                 nameValid = /[a-zA-Z0-9]{3,}/;
-                fieldValidationErrors.name = nameValid ? '' : ' is invalid';
+                fieldValidationErrors.name = nameValid ? true : false;
                 break;
               case 'email': 
                 emailValid = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
-                fieldValidationErrors.email = emailValid ? '' : ' is invalid';
+                fieldValidationErrors.email = emailValid ? true : false;
                 break;
               case 'tel':
                 telValid = /^\d+$/
-                fieldValidationErrors.tel = telValid ? '' : ' is invalid';
+                fieldValidationErrors.tel = telValid ? true : false;
                 break;
               default:
                 break;
