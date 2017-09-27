@@ -15,10 +15,9 @@ class UserForm extends Component {
             name: '',
             email: '',
             tel: '',
-            formErrors: {name: '', email: '', tel: ''},
-            nameValid: false,
-            emailValid: false,
-            telValid: false 
+            nameError: false,
+            emailError: false,
+            telError: false
 
         };
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -29,65 +28,91 @@ class UserForm extends Component {
       componentDidMount() {
         
     }
+    sendForm() {
+        alert('run')
+    }
+   
+
+    formValid() {
+        if(/[a-zA-Z0-9]/.test(this.state.name)) {
+            this.setState(
+                {
+                    nameError: false  
+                }
+            )
+        }
+        else{
+            this.setState(
+                {
+                    nameError: true  
+                }
+            )     
+        }
+         
+        if(/^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/.test(this.state.email)) {
+            this.setState(
+                {
+                    emailError: false  
+                }
+            )
+        }
+        else{
+            this.setState(
+                {
+                    emailError: true  
+                }
+            )     
+        }
+        if(/[0-9]/.test(this.state.tel)) {
+            this.setState(
+                {
+                    telError: false  
+                }
+            )
+        }
+        else{
+            this.setState(
+                {
+                    telError: true  
+                }
+            )     
+        }
+    }
 
     
 
-
-
     handleSubmit(event) {
-        function call() {
-            var msg   = $('#formx').serialize();
-             $.ajax({
-               type: 'POST',
-               url: '',
-               data: msg,
-               success: function(data) {
-                 alert("Отправленно");
-               },
-               error:  function(xhr, str){
-             alert('Возникла ошибка: ' + xhr.responseCode);
-               }
-             });
-        
-         }
+        event.preventDefault()
+        this.formValid()
+        if(this.state.nameError === false) {
+            this.sendForm()
+        }
+        else if(this.state.emailError === false) {
+            this.sendForm()
+        }
+        else if(this.state.telError === false) {
+            this.sendForm()
+        }
       }
+     
 
     handleChange(event, fieldName) {
-        this.setState({[fieldName]: event.target.value}),
-        () => {this.validateField(fieldName, event.target.value)}
+        this.setState({[fieldName]: event.target.value})
       }
-      validateField(fieldName, value)
-      {
-          let fieldValidationErrors = this.state.formErrors;
-          let nameValid = this.state.namValid
-          let emailValid = this.state.emailValid
-          let telValid = this.state.telValid
-          switch(fieldName) {
-              case 'name': 
-                nameValid = /[a-zA-Z0-9]{3,}/;
-                fieldValidationErrors.name = nameValid ? true : false;
-                break;
-              case 'email': 
-                emailValid = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
-                fieldValidationErrors.email = emailValid ? true : false;
-                break;
-              case 'tel':
-                telValid = /^\d+$/
-                fieldValidationErrors.tel = telValid ? true : false;
-                break;
-              default:
-                break;
-            }
-      }
+      
 
 
 
   render() {
+    console.log(this.state.nameError)
     return (
-      <form method="POST" id="formx"  onSubmit={this.handleSubmit}>
+      <form   onSubmit={this.handleSubmit}>
           <input type="text" placeholder="Name" value={this.state.value} onChange={(e) => this.handleChange(e, 'name')} ref="name"/> 
-          <input type="e-mail" placeholder="Email" value={this.state.value} onChange={(e) => this.handleChange(e, 'email')} ref="email"/>  
-          <input type="tel" placeholder="Tel." value={this.state.value} onChange={(e) => this.handleChange(e, 'tel')} ref="tel"/> 
+          {this.state.nameError && <p>Неверные символы</p>}
+          <input type="e-mail" placeholder="Email" value={this.state.value} onChange={(e) => this.handleChange(e, 'email')} ref="email"/>
+          {this.state.emailError && <p>Неверные символы</p>}  
+          <input type="tel" placeholder="Tel." value={this.state.value} onChange={(e) => this.handleChange(e, 'tel')} ref="tel"/>
+          {this.state.telError && <p>Неверные символы</p>} 
           <button type="submit">Submit</button>
       </form>
       

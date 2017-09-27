@@ -32,5 +32,8 @@ button {
   text-transform: uppercase;
   cursor: pointer;
 }
+.nameError {
+  color: red;
+}
 
 
