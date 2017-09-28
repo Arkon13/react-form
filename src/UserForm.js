@@ -17,23 +17,57 @@ class UserForm extends Component {
             tel: '',
             nameError: false,
             emailError: false,
-            telError: false
+            telError: false,
+            noUser : false,
+            hiUser: true,
+            user: ''
 
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.notUser = this.notUser.bind(this);
         
+    }
+
+    notUser(data) {
+        if(data.message === "no2") {
+            this.setState({
+                noUser: true,
+            })
+        }
+        else {
+            this.setState({
+                hiUser: false,
+                users: data
+            })
+        }
     }
 
       componentDidMount() {
-        
+       
     }
+    
     sendForm() {
-        alert('run')
+        let data = {
+            name: this.state.name,
+            email: this.state.email,
+            tel: this.state.tel
+          }
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost/index.php',
+            data: data,
+            success: (data) => {
+                this.notUser(data) 
+            }
+            
+          })
     }
+    
    
 
     formValid() {
+        let valid = true
         if(/[a-zA-Z0-9]/.test(this.state.name)) {
             this.setState(
                 {
@@ -46,7 +80,8 @@ class UserForm extends Component {
                 {
                     nameError: true  
                 }
-            )     
+            )
+            valid = false    
         }
          
         if(/^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/.test(this.state.email)) {
@@ -61,7 +96,8 @@ class UserForm extends Component {
                 {
                     emailError: true  
                 }
-            )     
+            )
+            valid = false    
         }
         if(/[0-9]/.test(this.state.tel)) {
             this.setState(
@@ -75,24 +111,17 @@ class UserForm extends Component {
                 {
                     telError: true  
                 }
-            )     
+            )
+            valid = false     
         }
+        return valid
     }
 
     
 
     handleSubmit(event) {
         event.preventDefault()
-        this.formValid()
-        if(this.state.nameError === false) {
-            this.sendForm()
-        }
-        else if(this.state.emailError === false) {
-            this.sendForm()
-        }
-        else if(this.state.telError === false) {
-            this.sendForm()
-        }
+        if (this.formValid()) this.sendForm()
       }
      
 
@@ -104,9 +133,12 @@ class UserForm extends Component {
 
 
   render() {
-    console.log(this.state.nameError)
+    console.log(this.state.noUser)
     return (
-      <form   onSubmit={this.handleSubmit}>
+        <div>
+            {this.state.hiUser ?
+      <form method="POST" id="formx" onSubmit={this.handleSubmit}>
+          {this.state.noUser && <p>Такого пользователя нет!</p>}
           <input type="text" placeholder="Name" value={this.state.value} onChange={(e) => this.handleChange(e, 'name')} ref="name"/> 
           {this.state.nameError && <p>Неверные символы</p>}
           <input type="e-mail" placeholder="Email" value={this.state.value} onChange={(e) => this.handleChange(e, 'email')} ref="email"/>
@@ -115,7 +147,10 @@ class UserForm extends Component {
           {this.state.telError && <p>Неверные символы</p>} 
           <button type="submit">Submit</button>
       </form>
-      
+                :
+                    <p>Добрый день {"" + this.state.users.message}</p>  
+            }
+      </div>
     );
   }
 }
